@@ -12,13 +12,14 @@ import {
 export default function App() {
   const [cocktails, setCocktails] = useState([]);
   const [allIngredients, setAllIngredients] = useState([]);
+  const [allGlasses, setAllGlasses] = useState([]);
 
   useEffect(() => {
     const alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
     Promise.all(
       alphabet.map((letter) =>
         new Promise((resolve, reject) => {
-          fetch(`api/json/v1/1/search.php?f=${letter}`)
+          fetch(`http://localhost:3000/api/json/v1/1/search.php?f=${letter}`)
             .then(response => response.json())
             .then(data => resolve(data))
         })
@@ -34,11 +35,18 @@ export default function App() {
               ingredient: cocktail["strIngredient" + i],
               measure: cocktail["strMeasure" + i]
             });
-            allIngredients.push(cocktail["strIngredient" + i]);
+            !allIngredients.includes(cocktail["strIngredient" + i].toLowerCase()) && allIngredients.push(cocktail["strIngredient" + i].toLowerCase());
             setAllIngredients(allIngredients);
           }
+
+          !allGlasses.includes(cocktail["strGlass"].toLowerCase()) && allGlasses.push(cocktail["strGlass"].toLowerCase());
+          setAllGlasses(allGlasses)
+
           return { ...cocktail, ingredients: ingredients }
         }))
+
+        setAllIngredients(allIngredients.sort());
+        setAllGlasses(allGlasses.sort());
       })
   }, [])
 
@@ -55,7 +63,7 @@ export default function App() {
 
         <Routes>
           <Route path="/cocktail/:id" element={<CocktailDetails cocktails={cocktails} />} />
-          <Route path="/" element={<ListView cocktails={cocktails} allIngredients={allIngredients} />} />
+          <Route path="/" element={<ListView cocktails={cocktails} allIngredients={allIngredients} allGlasses={allGlasses} />} />
         </Routes>
       </div>
     </Router>
