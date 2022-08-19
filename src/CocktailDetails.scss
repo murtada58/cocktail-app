@@ -1,0 +1,24 @@
+.cocktail-details {
+    text-align: center;
+
+    .cocktail-image {
+        max-width: 400px;
+    }
+
+    .ingredients-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .alcoholic-label {
+        color: crimson;
+    }
+
+    .non-alcoholic-label {
+        color: green;
+    }
+
+    
+
+}
+
